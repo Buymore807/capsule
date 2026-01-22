@@ -74,7 +74,7 @@ const App: React.FC = () => {
             </div>
             <div className="flex flex-col">
               <h1 className="text-3xl font-black font-space tracking-tighter text-white uppercase italic leading-none mb-1">
-                  CHRONOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">STAR</span>
+                  AETERNYA
               </h1>
               <span className="text-[10px] font-black tracking-[0.6em] text-slate-500 uppercase font-space">{t.nav_archive}</span>
             </div>

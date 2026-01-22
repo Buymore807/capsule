@@ -1,6 +1,7 @@
+
 {
-  "name": "Chronos Star",
-  "description": "A celestial public time capsule where memories become stars in an infinite cosmic timeline.",
+  "name": "Aeternya",
+  "description": "Because some moments deserve eternity. A celestial public time capsule where memories become stars.",
   "requestFramePermissions": [
     "camera"
   ]
