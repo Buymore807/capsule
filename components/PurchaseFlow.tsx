@@ -1,16 +1,20 @@
 
 import React, { useState } from 'react';
-import { Tier, Capsule } from '../types';
+import { Tier, Capsule, Language } from '../types';
 import { OFFERS } from '../constants';
+import { translations } from '../i18n';
 
 interface Props {
+  lang: Language;
   onClose: () => void;
   onSuccess: (capsule: Capsule) => void;
 }
 
-const PurchaseFlow: React.FC<Props> = ({ onClose, onSuccess }) => {
+const PurchaseFlow: React.FC<Props> = ({ lang, onClose, onSuccess }) => {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [selectedTier, setSelectedTier] = useState<Tier | null>(null);
+  const t = translations[lang];
+
   const [formData, setFormData] = useState({
     title: '',
     message: '',
@@ -32,6 +36,12 @@ const PurchaseFlow: React.FC<Props> = ({ onClose, onSuccess }) => {
     onSuccess(newCapsule);
   };
 
+  const getStepTitle = () => {
+    if (step === 1) return t.purchase_step_1;
+    if (step === 2) return t.purchase_step_2;
+    return t.purchase_step_3;
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-xl overflow-y-auto">
       <div className="w-full max-w-4xl bg-slate-900 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden my-8">
@@ -39,8 +49,10 @@ const PurchaseFlow: React.FC<Props> = ({ onClose, onSuccess }) => {
         {/* Header */}
         <div className="px-8 py-6 border-b border-slate-800 flex justify-between items-center bg-slate-900/50 sticky top-0 z-10 backdrop-blur-md">
           <div>
-            <h2 className="text-2xl font-bold text-white">Engrave a Memory</h2>
-            <p className="text-slate-400 text-sm">Step {step} of 3: {step === 1 ? 'Choose Offer' : step === 2 ? 'Customize Capsule' : 'Payment'}</p>
+            <h2 className="text-2xl font-bold text-white font-space uppercase tracking-tight">{t.purchase_title}</h2>
+            <p className="text-slate-400 text-xs font-black uppercase tracking-widest mt-1">
+              {t.purchase_step.replace('{step}', step.toString())}: {getStepTitle()}
+            </p>
           </div>
           <button onClick={onClose} className="text-slate-500 hover:text-white transition-colors">
              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,17 +68,17 @@ const PurchaseFlow: React.FC<Props> = ({ onClose, onSuccess }) => {
                 <div 
                   key={offer.id}
                   onClick={() => setSelectedTier(offer.id)}
-                  className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all hover:scale-105 ${
+                  className={`relative p-8 rounded-[2rem] border-2 cursor-pointer transition-all hover:scale-105 ${
                     selectedTier === offer.id ? `${offer.color} bg-indigo-500/10` : 'border-slate-800 bg-slate-800/50 grayscale hover:grayscale-0'
                   }`}
                 >
-                  <h3 className="text-xl font-bold mb-2">{offer.name}</h3>
-                  <div className="text-3xl font-black mb-4">${offer.price}</div>
-                  <p className="text-sm text-slate-400 mb-6">{offer.description}</p>
+                  <h3 className="text-xl font-black font-space uppercase mb-2">{offer.name}</h3>
+                  <div className="text-3xl font-black font-space mb-4 tracking-tighter">${offer.price}</div>
+                  <p className="text-xs text-slate-400 mb-6 leading-relaxed">{offer.description}</p>
                   <ul className="space-y-3">
                     {offer.features.map((f, i) => (
-                      <li key={i} className="flex items-center gap-2 text-xs text-slate-300">
-                        <svg className="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <li key={i} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-slate-300">
+                        <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         {f}
@@ -86,85 +98,87 @@ const PurchaseFlow: React.FC<Props> = ({ onClose, onSuccess }) => {
                 <button 
                   disabled={!selectedTier}
                   onClick={() => setStep(2)}
-                  className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg shadow-indigo-500/30"
+                  className="px-10 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-black uppercase tracking-[0.2em] font-space rounded-xl transition-all shadow-lg shadow-indigo-500/30"
                 >
-                  Continue to Customization
+                  {t.purchase_btn_continue}
                 </button>
               </div>
             </div>
           )}
 
           {step === 2 && (
-            <div className="space-y-6 animate-in fade-in slide-in-from-right-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-8 animate-in fade-in slide-in-from-right-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Date of Memory</label>
+                  <label className="block text-[10px] font-black text-slate-500 mb-3 uppercase tracking-[0.3em] font-space">{t.purchase_field_date}</label>
                   <input 
                     type="date"
                     value={formData.date}
                     onChange={e => setFormData({...formData, date: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-6 py-4 rounded-2xl bg-slate-950/60 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Title</label>
+                  <label className="block text-[10px] font-black text-slate-500 mb-3 uppercase tracking-[0.3em] font-space">{t.purchase_field_title}</label>
                   <input 
                     placeholder="E.g. The first summer night"
                     value={formData.title}
                     onChange={e => setFormData({...formData, title: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    className="w-full px-6 py-4 rounded-2xl bg-slate-950/60 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Message</label>
+                <label className="block text-[10px] font-black text-slate-500 mb-3 uppercase tracking-[0.3em] font-space">{t.purchase_field_message}</label>
                 <textarea 
                   rows={4}
                   placeholder="Share the core of this memory..."
                   value={formData.message}
                   onChange={e => setFormData({...formData, message: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
+                  className="w-full px-6 py-4 rounded-2xl bg-slate-950/60 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none transition-all"
                 />
               </div>
 
-              <div className="flex items-center gap-4">
-                <div className="flex-1">
-                  <label className="block text-sm font-bold text-slate-400 mb-2 uppercase tracking-wider">Author Name</label>
+              <div className="flex flex-col md:flex-row items-center gap-8">
+                <div className="flex-1 w-full">
+                  <label className="block text-[10px] font-black text-slate-500 mb-3 uppercase tracking-[0.3em] font-space">{t.purchase_field_author}</label>
                   <input 
                     disabled={formData.isAnonymous}
                     placeholder="Your Name"
                     value={formData.author}
                     onChange={e => setFormData({...formData, author: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+                    className="w-full px-6 py-4 rounded-2xl bg-slate-950/60 border border-slate-700 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 transition-all"
                   />
                 </div>
-                <div className="pt-8">
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input 
-                      type="checkbox"
-                      checked={formData.isAnonymous}
-                      onChange={e => setFormData({...formData, isAnonymous: e.target.checked, author: e.target.checked ? '' : formData.author})}
-                      className="w-6 h-6 rounded border-slate-700 text-indigo-500 focus:ring-indigo-500 bg-slate-800"
-                    />
-                    <span className="text-sm text-slate-300">Publish Anonymously</span>
+                <div className="md:pt-8 w-full md:w-auto">
+                  <label className="flex items-center gap-4 cursor-pointer group">
+                    <div className="relative">
+                        <input 
+                          type="checkbox"
+                          checked={formData.isAnonymous}
+                          onChange={e => setFormData({...formData, isAnonymous: e.target.checked, author: e.target.checked ? '' : formData.author})}
+                          className="w-6 h-6 rounded border-slate-700 text-indigo-500 focus:ring-indigo-500 bg-slate-800 cursor-pointer"
+                        />
+                    </div>
+                    <span className="text-xs font-bold text-slate-400 group-hover:text-white transition-colors uppercase tracking-widest">{t.purchase_field_anon}</span>
                   </label>
                 </div>
               </div>
 
-              <div className="flex justify-between mt-8">
+              <div className="flex justify-between mt-12 border-t border-white/5 pt-8">
                 <button 
                   onClick={() => setStep(1)}
-                  className="px-8 py-4 text-slate-400 hover:text-white transition-colors"
+                  className="px-8 py-4 text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors"
                 >
                   Back
                 </button>
                 <button 
                   disabled={!formData.title || !formData.message || !formData.date}
                   onClick={() => setStep(3)}
-                  className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white font-bold rounded-xl transition-all"
+                  className="px-10 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-black uppercase tracking-[0.2em] font-space rounded-xl transition-all shadow-lg"
                 >
-                  Go to Secure Payment
+                  {t.purchase_btn_secure}
                 </button>
               </div>
             </div>
@@ -172,42 +186,44 @@ const PurchaseFlow: React.FC<Props> = ({ onClose, onSuccess }) => {
 
           {step === 3 && (
             <div className="flex flex-col items-center justify-center py-12 animate-in fade-in zoom-in">
-              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-500 rounded-full flex items-center justify-center mb-6">
+              <div className="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mb-8 border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
                  <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04kM12 21.48l.348-.07a11.955 11.955 0 01-8.618-3.04V12.03c0-3.32 1.51-6.28 3.88-8.29l.348-.07z" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold mb-2 text-white">Secure Checkout</h3>
-              <p className="text-slate-400 mb-8">You are about to pay ${OFFERS.find(o => o.id === selectedTier)?.price} for the {selectedTier} tier.</p>
+              <h3 className="text-3xl font-black mb-2 text-white font-space uppercase tracking-tight">{t.purchase_checkout_title}</h3>
+              <p className="text-slate-400 mb-10 text-center font-light">
+                {t.purchase_checkout_desc.replace('{price}', `$${OFFERS.find(o => o.id === selectedTier)?.price}`).replace('{tier}', selectedTier || '')}
+              </p>
               
-              <div className="w-full max-w-sm bg-slate-800 p-6 rounded-2xl border border-slate-700 mb-8">
+              <div className="w-full max-w-sm bg-slate-950/60 p-8 rounded-3xl border border-white/5 mb-10 backdrop-blur-md">
                 <div className="flex justify-between mb-4">
-                  <span className="text-slate-400">Memory Slot</span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Slot Unit</span>
                   <span className="text-white font-bold">${OFFERS.find(o => o.id === selectedTier)?.price}.00</span>
                 </div>
                 <div className="flex justify-between mb-4">
-                  <span className="text-slate-400">Processing Fee</span>
+                  <span className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Protocol Fee</span>
                   <span className="text-white font-bold">$0.00</span>
                 </div>
-                <div className="h-px bg-slate-700 my-4" />
-                <div className="flex justify-between text-xl font-bold">
-                  <span className="text-white">Total</span>
-                  <span className="text-indigo-400">${OFFERS.find(o => o.id === selectedTier)?.price}.00</span>
+                <div className="h-px bg-white/5 my-6" />
+                <div className="flex justify-between items-end">
+                  <span className="text-slate-300 text-[10px] font-black uppercase tracking-widest">Total Energy</span>
+                  <span className="text-indigo-400 text-3xl font-black font-space tracking-tighter">${OFFERS.find(o => o.id === selectedTier)?.price}.00</span>
                 </div>
               </div>
 
-              <div className="flex gap-4">
+              <div className="flex gap-6">
                 <button 
                   onClick={() => setStep(2)}
-                  className="px-8 py-4 text-slate-400 hover:text-white transition-colors"
+                  className="px-8 py-4 text-slate-500 hover:text-white text-[10px] font-black uppercase tracking-widest transition-colors"
                 >
                   Review Details
                 </button>
                 <button 
                   onClick={handleCreate}
-                  className="px-12 py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-emerald-500/20"
+                  className="px-12 py-5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-black uppercase tracking-[0.3em] font-space rounded-2xl transition-all shadow-xl shadow-emerald-600/20"
                 >
-                  Pay & Publish Now
+                  {t.purchase_btn_pay}
                 </button>
               </div>
             </div>

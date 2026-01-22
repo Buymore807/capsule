@@ -1,14 +1,17 @@
 
 import React from 'react';
-import { Capsule } from '../types';
+import { Capsule, Language } from '../types';
+import { translations } from '../i18n';
 
 interface Props {
   capsule: Capsule | null;
+  lang: Language;
   onClose: () => void;
 }
 
-const CapsuleModal: React.FC<Props> = ({ capsule, onClose }) => {
+const CapsuleModal: React.FC<Props> = ({ capsule, lang, onClose }) => {
   if (!capsule) return null;
+  const t = translations[lang];
 
   const getTierStyles = () => {
     switch(capsule.tier) {
@@ -18,9 +21,17 @@ const CapsuleModal: React.FC<Props> = ({ capsule, onClose }) => {
     }
   };
 
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString(lang, { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-      <div className={`relative w-full max-w-3xl bg-slate-950/80 border rounded-[2rem] overflow-hidden transition-all duration-700 animate-in fade-in zoom-in-95 ${getTierStyles()}`}>
+      <div className={`relative w-full max-w-4xl bg-slate-950/80 border rounded-[2.5rem] overflow-hidden transition-all duration-700 animate-in fade-in zoom-in-95 ${getTierStyles()}`}>
         
         {/* Star Sparkle Particles (CSS Only) */}
         <div className="absolute inset-0 pointer-events-none opacity-20">
@@ -31,7 +42,7 @@ const CapsuleModal: React.FC<Props> = ({ capsule, onClose }) => {
 
         <button 
           onClick={onClose}
-          className="absolute top-6 right-6 z-10 p-2 bg-black/50 text-slate-400 hover:text-white rounded-full transition-all border border-white/10 hover:border-white/30"
+          className="absolute top-8 right-8 z-10 p-3 bg-black/60 text-slate-400 hover:text-white rounded-full transition-all border border-white/10 hover:border-white/30"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -43,50 +54,50 @@ const CapsuleModal: React.FC<Props> = ({ capsule, onClose }) => {
             <img 
               src={capsule.imageUrl} 
               alt={capsule.title}
-              className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700"
+              className="w-full h-full object-cover grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 min-h-[400px]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60" />
           </div>
 
-          <div className="w-full md:w-1/2 p-10 flex flex-col justify-between">
+          <div className="w-full md:w-1/2 p-12 flex flex-col justify-between">
             <div>
-              <div className="flex items-center gap-3 mb-6">
-                <span className={`px-4 py-1 text-[10px] font-black rounded-full uppercase tracking-[0.2em] border ${
-                  capsule.tier === 'CONSTELLATION' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_10px_rgba(251,191,36,0.2)]' :
+              <div className="flex items-center gap-4 mb-10">
+                <span className={`px-5 py-1 text-[9px] font-black rounded-full uppercase tracking-[0.2em] border ${
+                  capsule.tier === 'CONSTELLATION' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 shadow-[0_0_15px_rgba(251,191,36,0.2)]' :
                   capsule.tier === 'SOUVENIR' ? 'bg-blue-500/10 text-blue-400 border-blue-500/30' :
                   'bg-slate-500/10 text-slate-400 border-slate-700'
                 }`}>
-                  {capsule.tier} Capsule
+                  {capsule.tier} {t.modal_capsule}
                 </span>
-                <span className="text-slate-600 font-space text-xs">/</span>
-                <span className="text-indigo-300 font-space text-xs font-bold tracking-widest">{new Date(capsule.date).toLocaleDateString()}</span>
+                <span className="text-slate-700 font-space text-xs">/</span>
+                <span className="text-indigo-300 font-space text-[10px] font-black tracking-widest uppercase">{formatDate(capsule.date)}</span>
               </div>
 
-              <h2 className="text-4xl font-black font-space mb-6 text-white leading-tight tracking-tight">{capsule.title}</h2>
-              <div className="h-0.5 w-12 bg-indigo-500 mb-6 rounded-full" />
-              <p className="text-slate-400 text-lg leading-relaxed font-light italic mb-8">
+              <h2 className="text-5xl font-black font-space mb-8 text-white leading-tight tracking-tight uppercase">{capsule.title}</h2>
+              <div className="h-1 w-16 bg-indigo-500 mb-8 rounded-full shadow-[0_0_10px_rgba(99,102,241,0.5)]" />
+              <p className="text-slate-300 text-xl leading-relaxed font-light italic mb-10">
                 "{capsule.message}"
               </p>
             </div>
 
-            <div className="flex items-center justify-between pt-8 border-t border-white/5">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-700 flex items-center justify-center font-black text-white shadow-lg shadow-indigo-500/20 transform rotate-3">
+            <div className="flex items-center justify-between pt-10 border-t border-white/5">
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-800 flex items-center justify-center font-black text-xl text-white shadow-xl shadow-indigo-500/30 transform rotate-3">
                   {capsule.author[0]}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-white tracking-wide">
-                    {capsule.isAnonymous ? 'Anonyme Star' : capsule.author}
+                  <p className="text-base font-black text-white tracking-wide font-space uppercase">
+                    {capsule.isAnonymous ? t.modal_anonymous : capsule.author}
                   </p>
-                  <p className="text-[10px] text-slate-500 uppercase tracking-widest">Chronos Guardian</p>
+                  <p className="text-[9px] text-slate-500 uppercase tracking-[0.3em] font-black mt-1">{t.modal_guardian}</p>
                 </div>
               </div>
               
               <button className="group flex flex-col items-center gap-1 transition-all hover:scale-110">
-                <svg className="w-7 h-7 text-rose-500 group-hover:fill-rose-500 transition-all drop-shadow-[0_0_5px_rgba(244,63,94,0.3)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 text-rose-500 group-hover:fill-rose-500 transition-all drop-shadow-[0_0_10px_rgba(244,63,94,0.4)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
-                <span className="text-[10px] font-black text-slate-400 group-hover:text-rose-400">{capsule.likes}</span>
+                <span className="text-[10px] font-black text-slate-500 group-hover:text-rose-400">{capsule.likes}</span>
               </button>
             </div>
           </div>

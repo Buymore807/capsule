@@ -4,17 +4,21 @@ import Cosmos from './components/Cosmos';
 import Timeline from './components/Timeline';
 import CapsuleModal from './components/CapsuleModal';
 import PurchaseFlow from './components/PurchaseFlow';
-import { Capsule } from './types';
+import { Capsule, Language } from './types';
 import { MOCK_CAPSULES } from './constants';
 import { generateStellarSummary } from './services/geminiService';
+import { translations } from './i18n';
 
 const App: React.FC = () => {
+  const [lang, setLang] = useState<Language>('en');
   const [capsules, setCapsules] = useState<Capsule[]>(MOCK_CAPSULES);
   const [selectedCapsule, setSelectedCapsule] = useState<Capsule | null>(null);
   const [isPurchaseFlowOpen, setIsPurchaseFlowOpen] = useState(false);
   const [stellarSummary, setStellarSummary] = useState<string | null>(null);
   const [isLoadingSummary, setIsLoadingSummary] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const t = translations[lang];
 
   const filteredCapsules = capsules.filter(c => 
     c.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -31,10 +35,10 @@ const App: React.FC = () => {
     });
 
     if (dateCapsules.length > 0) {
-      const summary = await generateStellarSummary(date, dateCapsules);
+      const summary = await generateStellarSummary(date, dateCapsules, lang);
       setStellarSummary(summary);
     } else {
-      setStellarSummary("A silent sector of the cosmic void. It waits for your light to join the constellation.");
+      setStellarSummary(t.void_msg);
     }
     setIsLoadingSummary(false);
   };
@@ -43,6 +47,13 @@ const App: React.FC = () => {
     setCapsules([newCapsule, ...capsules]);
     setIsPurchaseFlowOpen(false);
   };
+
+  const languages: { code: Language; label: string }[] = [
+    { code: 'en', label: 'EN' },
+    { code: 'fr', label: 'FR' },
+    { code: 'es', label: 'ES' },
+    { code: 'de', label: 'DE' }
+  ];
 
   return (
     <div className="min-h-screen cosmos-bg flex flex-col relative overflow-hidden">
@@ -65,16 +76,31 @@ const App: React.FC = () => {
               <h1 className="text-3xl font-black font-space tracking-tighter text-white uppercase italic leading-none mb-1">
                   CHRONOS <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">STAR</span>
               </h1>
-              <span className="text-[10px] font-black tracking-[0.6em] text-slate-500 uppercase font-space">Universal Archive</span>
+              <span className="text-[10px] font-black tracking-[0.6em] text-slate-500 uppercase font-space">{t.nav_archive}</span>
             </div>
           </div>
 
-          <div className="pointer-events-auto hidden lg:flex items-center gap-12">
-             <div className="relative group">
+          <div className="pointer-events-auto flex items-center gap-8">
+             {/* Language Switcher */}
+             <div className="hidden sm:flex bg-slate-950/40 border border-white/10 p-1 rounded-full backdrop-blur-md">
+                {languages.map((l) => (
+                   <button
+                    key={l.code}
+                    onClick={() => setLang(l.code)}
+                    className={`px-3 py-1 text-[10px] font-black font-space rounded-full transition-all ${
+                      lang === l.code ? 'bg-indigo-600 text-white' : 'text-slate-500 hover:text-slate-300'
+                    }`}
+                   >
+                    {l.label}
+                   </button>
+                ))}
+             </div>
+
+             <div className="relative group hidden lg:block">
                 <div className="absolute inset-0 bg-indigo-500/5 blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
                 <input 
                   type="text"
-                  placeholder="SCAN ARCHIVE..."
+                  placeholder={t.nav_scan}
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   className="bg-slate-950/60 border border-white/10 rounded-full px-8 py-3 w-80 text-white placeholder:text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500/50 text-[10px] font-black tracking-[0.3em] font-space transition-all backdrop-blur-md"
@@ -89,7 +115,7 @@ const App: React.FC = () => {
               >
                 <div className="absolute inset-0 bg-white group-hover:bg-indigo-500 transition-colors duration-500" />
                 <span className="relative z-10 text-slate-950 group-hover:text-white text-[10px] font-black uppercase tracking-[0.3em] font-space">
-                  Launch Capsule
+                  {t.nav_launch}
                 </span>
               </button>
           </div>
@@ -102,22 +128,22 @@ const App: React.FC = () => {
         <div className="mb-32">
           <div className="flex items-center gap-6 mb-10 animate-in slide-in-from-left-8 duration-700">
             <div className="h-px w-20 bg-indigo-500/50" />
-            <span className="text-xs font-black uppercase tracking-[0.6em] text-indigo-400 font-space">Sector-7 Archiving Protocol</span>
+            <span className="text-xs font-black uppercase tracking-[0.6em] text-indigo-400 font-space">{t.hero_archive_protocol}</span>
           </div>
           <h2 className="text-7xl md:text-[9rem] font-black mb-12 text-white leading-[0.85] tracking-tighter font-space uppercase">
-            ETERNITY <br/>IN THE <span className="text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 via-purple-400 to-white">VOID.</span>
+            {t.hero_title_1} <br/>{t.hero_title_2} <span className="text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 via-purple-400 to-white">{t.hero_title_3}</span>
           </h2>
           <div className="flex flex-col md:flex-row gap-16 items-start">
             <p className="text-slate-400 text-xl font-light max-w-2xl leading-relaxed italic border-l border-white/10 pl-10">
-              Transform your transient moments into eternal constellations. Chronos Star is more than a database; it's a living map of human experience carved into the infinite sky.
+              {t.hero_desc}
             </p>
             <div className="flex gap-12">
                <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-indigo-500 tracking-widest uppercase mb-2">Stars Recorded</span>
+                  <span className="text-[10px] font-black text-indigo-500 tracking-widest uppercase mb-2">{t.hero_stat_recorded}</span>
                   <span className="text-5xl font-black text-white font-space tracking-tighter">{capsules.length.toLocaleString()}</span>
                </div>
                <div className="flex flex-col">
-                  <span className="text-[10px] font-black text-indigo-500 tracking-widest uppercase mb-2">Epoch Range</span>
+                  <span className="text-[10px] font-black text-indigo-500 tracking-widest uppercase mb-2">{t.hero_stat_range}</span>
                   <span className="text-5xl font-black text-white font-space tracking-tighter">110Y</span>
                </div>
             </div>
@@ -139,7 +165,7 @@ const App: React.FC = () => {
                     <path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" />
                   </svg>
                 </div>
-                <h3 className="text-indigo-400 font-black uppercase tracking-[0.5em] text-xs font-space">Universal Oracle Translation</h3>
+                <h3 className="text-indigo-400 font-black uppercase tracking-[0.5em] text-xs font-space">{t.oracle_title}</h3>
               </div>
               
               <p className="text-white text-3xl md:text-5xl font-light italic leading-[1.1] max-w-5xl relative z-10 tracking-tight">
@@ -150,7 +176,7 @@ const App: React.FC = () => {
                 onClick={() => setStellarSummary(null)}
                 className="mt-12 text-[10px] font-black text-indigo-400/40 hover:text-indigo-400 transition-all uppercase tracking-[0.5em] font-space flex items-center gap-4 group/btn"
               >
-                <div className="w-12 h-px bg-current group-hover/btn:w-20 transition-all" /> Dismiss Oracle Vision
+                <div className="w-12 h-px bg-current group-hover/btn:w-20 transition-all" /> {t.oracle_dismiss}
               </button>
            </div>
         )}
@@ -161,14 +187,14 @@ const App: React.FC = () => {
           <div className="relative bg-slate-950/40 border border-white/10 rounded-[4rem] p-16 overflow-hidden shadow-2xl backdrop-blur-xl group">
               <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 mb-20">
                   <div className="max-w-xl">
-                      <h3 className="text-4xl font-black text-white font-space tracking-tight mb-4 uppercase">Horizon Navigation</h3>
-                      <p className="text-slate-500 text-sm font-light leading-relaxed">Adjust your temporal lens to witness the birth and persistence of human memory across the ecliptic plane.</p>
+                      <h3 className="text-4xl font-black text-white font-space tracking-tight mb-4 uppercase">{t.horizon_title}</h3>
+                      <p className="text-slate-500 text-sm font-light leading-relaxed">{t.horizon_desc}</p>
                   </div>
                   <div className="flex flex-wrap gap-10 items-center bg-slate-900/40 px-10 py-5 rounded-[2rem] border border-white/5 backdrop-blur-md">
                       {[
-                          { color: 'bg-slate-500', label: 'Fragment' },
-                          { color: 'bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.6)]', label: 'Aura' },
-                          { color: 'bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.7)]', label: 'Nova' }
+                          { color: 'bg-slate-500', label: t.tier_fragment },
+                          { color: 'bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.6)]', label: t.tier_aura },
+                          { color: 'bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.7)]', label: t.tier_nova }
                       ].map((item, idx) => (
                           <span key={idx} className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 font-space">
                               <div className={`w-3 h-3 rounded-full ${item.color}`} /> {item.label}
@@ -178,6 +204,7 @@ const App: React.FC = () => {
               </div>
               
               <Timeline 
+                  lang={lang}
                   capsules={filteredCapsules}
                   onSelectCapsule={setSelectedCapsule}
                   onSelectDate={handleSelectDate}
@@ -189,16 +216,16 @@ const App: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mb-40">
           {[
             { 
-              title: "Star Resonance", 
-              desc: "Every memory slot is unique. As the constellation grows, your capsule's luminosity increases, echoing through the timeline." 
+              title: t.feature_1_title, 
+              desc: t.feature_1_desc
             },
             { 
-              title: "Temporal Guard", 
-              desc: "Encrypted memory structures ensure your legacy remains intact across the shifts of digital eras for up to 99 years." 
+              title: t.feature_2_title, 
+              desc: t.feature_2_desc
             },
             { 
-              title: "Stellar Synthesis", 
-              desc: "Our Gemini-powered Oracle weaves individual memories into collective poetic insights for every sector of time." 
+              title: t.feature_3_title, 
+              desc: t.feature_3_desc
             }
           ].map((item, i) => (
             <div key={i} className="group flex flex-col items-start text-left">
@@ -224,7 +251,7 @@ const App: React.FC = () => {
                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
               </div>
               <span className="relative z-10 text-slate-950 group-hover:text-white font-black text-[11px] uppercase tracking-[0.5em] font-space">
-                IGNITE A NEW STAR
+                {t.cta_ignite}
               </span>
             </button>
         </div>
@@ -232,12 +259,14 @@ const App: React.FC = () => {
 
       {/* Modals */}
       <CapsuleModal 
+        lang={lang}
         capsule={selectedCapsule} 
         onClose={() => setSelectedCapsule(null)} 
       />
       
       {isPurchaseFlowOpen && (
         <PurchaseFlow 
+          lang={lang}
           onClose={() => setIsPurchaseFlowOpen(false)}
           onSuccess={handleNewCapsule}
         />
@@ -254,8 +283,8 @@ const App: React.FC = () => {
                    <div className="w-1 h-1 bg-white rounded-full animate-ping" />
                 </div>
             </div>
-            <p className="text-white font-black font-space tracking-[0.5em] uppercase animate-pulse mb-3">Analyzing Sector</p>
-            <p className="text-indigo-400/60 text-[10px] uppercase tracking-widest font-space font-black">Decrypting collective consciousness...</p>
+            <p className="text-white font-black font-space tracking-[0.5em] uppercase animate-pulse mb-3">{t.oracle_loading}</p>
+            <p className="text-indigo-400/60 text-[10px] uppercase tracking-widest font-space font-black">{t.oracle_decrypting}</p>
           </div>
         </div>
       )}

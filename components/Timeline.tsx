@@ -1,16 +1,19 @@
 
 import React, { useState, useMemo } from 'react';
-import { Capsule } from '../types';
+import { Capsule, Language } from '../types';
+import { translations } from '../i18n';
 
 interface Props {
   capsules: Capsule[];
+  lang: Language;
   onSelectCapsule: (c: Capsule) => void;
   onSelectDate: (date: string) => void;
 }
 
-const Timeline: React.FC<Props> = ({ capsules, onSelectCapsule, onSelectDate }) => {
+const Timeline: React.FC<Props> = ({ capsules, lang, onSelectCapsule, onSelectDate }) => {
   const [zoomLevel, setZoomLevel] = useState<'YEAR' | 'MONTH'>('YEAR');
   const [viewingYear, setViewingYear] = useState(2025);
+  const t = translations[lang];
 
   const years = useMemo(() => {
     const start = 1940;
@@ -52,12 +55,12 @@ const Timeline: React.FC<Props> = ({ capsules, onSelectCapsule, onSelectDate }) 
               : 'bg-slate-950/40 text-slate-500 border-white/5 hover:bg-slate-900 hover:text-slate-300'
           }`}
         >
-          Explore Galaxy
+          {t.timeline_explore}
         </button>
         {zoomLevel === 'MONTH' && (
           <div className="flex items-center gap-6 animate-in fade-in slide-in-from-left-6">
             <div className="w-12 h-px bg-indigo-500/30" />
-            <span className="text-white font-space tracking-[0.4em] text-xs font-black italic">{viewingYear} SECTOR</span>
+            <span className="text-white font-space tracking-[0.4em] text-xs font-black italic">{viewingYear} {t.timeline_sector}</span>
           </div>
         )}
       </div>
@@ -178,7 +181,7 @@ const Timeline: React.FC<Props> = ({ capsules, onSelectCapsule, onSelectDate }) 
                   </span>
                   {hasCapsules && (
                     <span className="text-[10px] text-white font-black px-2 py-0.5 rounded-full bg-indigo-500/20 border border-indigo-500/30 mt-2">
-                      {monthCapsules.length} LIGHTS
+                      {monthCapsules.length} {t.timeline_lights}
                     </span>
                   )}
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent opacity-0 group-hover/month:opacity-100 transition-opacity" />

@@ -1,5 +1,6 @@
 
 export type Tier = 'ESSENTIEL' | 'SOUVENIR' | 'CONSTELLATION';
+export type Language = 'en' | 'fr' | 'es' | 'de';
 
 export interface Capsule {
   id: string;
