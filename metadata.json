@@ -1,0 +1,7 @@
+{
+  "name": "Chronos Star",
+  "description": "A celestial public time capsule where memories become stars in an infinite cosmic timeline.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
