@@ -182,25 +182,18 @@ const App: React.FC = () => {
            </div>
         )}
 
-        {/* Timeline Horizon */}
-        <div className="relative mb-20 md:mb-40">
-          <div className="absolute inset-0 bg-indigo-500/10 blur-[150px] rounded-full" />
-          <div className="relative bg-slate-950/40 border border-white/10 rounded-[2rem] md:rounded-[4rem] p-6 md:p-16 overflow-hidden shadow-2xl backdrop-blur-xl group">
-              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-8 mb-10 md:mb-20">
+        {/* THE CORE: Cosmic Temporal Navigator Section */}
+        <div className="relative mb-20 md:mb-40 min-h-[800px]">
+          <div className="absolute inset-0 bg-indigo-500/5 blur-[180px] rounded-full -z-10" />
+          <div className="relative bg-slate-950/40 border border-white/10 rounded-[2.5rem] md:rounded-[4rem] p-6 md:p-16 overflow-hidden shadow-2xl backdrop-blur-3xl group">
+              
+              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 mb-16">
                   <div className="max-w-xl">
-                      <h3 className="text-2xl md:text-4xl font-black text-white font-space tracking-tight mb-3 md:mb-4 uppercase">{t.horizon_title}</h3>
-                      <p className="text-slate-500 text-xs md:text-sm font-light leading-relaxed">{t.horizon_desc}</p>
-                  </div>
-                  <div className="flex flex-wrap gap-6 md:gap-10 items-center bg-slate-900/40 px-6 py-4 md:px-10 md:py-5 rounded-2xl md:rounded-[2rem] border border-white/5 backdrop-blur-md">
-                      {[
-                          { color: 'bg-slate-500', label: t.tier_fragment },
-                          { color: 'bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,0.6)]', label: t.tier_aura },
-                          { color: 'bg-amber-400 shadow-[0_0_20px_rgba(251,191,36,0.7)]', label: t.tier_nova }
-                      ].map((item, idx) => (
-                          <span key={idx} className="flex items-center gap-2 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-slate-500 font-space">
-                              <div className={`w-2 h-2 md:w-3 md:h-3 rounded-full ${item.color}`} /> {item.label}
-                          </span>
-                      ))}
+                      <div className="flex items-center gap-4 mb-4">
+                          <span className="w-12 h-[1px] bg-indigo-500" />
+                          <h3 className="text-2xl md:text-5xl font-black text-white font-space tracking-tight uppercase italic">{t.horizon_title}</h3>
+                      </div>
+                      <p className="text-slate-500 text-xs md:text-sm font-light leading-relaxed pl-16 border-l border-white/5">{t.horizon_desc}</p>
                   </div>
               </div>
               
@@ -220,9 +213,9 @@ const App: React.FC = () => {
             { title: t.feature_2_title, desc: t.feature_2_desc },
             { title: t.feature_3_title, desc: t.feature_3_desc }
           ].map((item, i) => (
-            <div key={i} className="group flex flex-col items-start text-left">
+            <div key={i} className="group flex flex-col items-start text-left bg-slate-950/20 p-8 rounded-[2rem] border border-white/5 hover:border-indigo-500/30 transition-all">
               <div className="text-[10px] font-black text-indigo-500 tracking-[0.3em] md:tracking-[0.4em] uppercase mb-4 md:mb-6 flex items-center gap-4">
-                 0{i + 1} <div className="w-6 md:w-8 h-px bg-current" />
+                 COORD_0{i + 1} <div className="w-6 md:w-8 h-px bg-current" />
               </div>
               <h4 className="text-2xl md:text-3xl font-black mb-4 md:mb-6 text-white font-space tracking-tight uppercase group-hover:text-indigo-400 transition-colors">{item.title}</h4>
               <p className="text-slate-500 text-base md:text-lg leading-relaxed font-light">{item.desc}</p>
@@ -231,15 +224,18 @@ const App: React.FC = () => {
         </div>
       </main>
 
-      {/* Primary Interaction Interface */}
+      {/* Mobile-First Sticky Launcher */}
       <div className="fixed bottom-8 md:bottom-16 left-0 right-0 px-4 md:px-10 z-40 pointer-events-none">
         <div className="max-w-[1600px] mx-auto flex justify-center pointer-events-auto">
            <button 
               onClick={() => setIsPurchaseFlowOpen(true)}
-              className="group relative px-10 md:px-20 py-5 md:py-8 overflow-hidden rounded-2xl md:rounded-[2rem] shadow-[0_30px_100px_-20px_rgba(79,70,229,0.5)] transition-all hover:scale-105 active:scale-95 w-full max-w-sm"
+              className="group relative px-10 md:px-20 py-5 md:py-8 overflow-hidden rounded-2xl md:rounded-[2rem] shadow-[0_30px_100px_-20px_rgba(79,70,229,0.5)] transition-all hover:scale-105 active:scale-95 w-full max-w-md"
             >
               <div className="absolute inset-0 bg-white group-hover:bg-indigo-600 transition-colors duration-500" />
-              <span className="relative z-10 text-slate-950 group-hover:text-white font-black text-[10px] md:text-[11px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-space">
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+              </div>
+              <span className="relative z-10 text-slate-950 group-hover:text-white font-black text-[10px] md:text-[12px] uppercase tracking-[0.3em] md:tracking-[0.6em] font-space">
                 {t.cta_ignite}
               </span>
             </button>
@@ -250,14 +246,17 @@ const App: React.FC = () => {
       {isPurchaseFlowOpen && <PurchaseFlow lang={lang} onClose={() => setIsPurchaseFlowOpen(false)} onSuccess={handleNewCapsule} />}
 
       {isLoadingSummary && (
-        <div className="fixed inset-0 z-[60] bg-[#020617]/90 flex items-center justify-center backdrop-blur-3xl">
+        <div className="fixed inset-0 z-[60] bg-[#020617]/95 flex items-center justify-center backdrop-blur-3xl">
           <div className="text-center px-6">
             <div className="relative w-24 h-24 md:w-32 md:h-32 mx-auto mb-8 md:mb-10">
                 <div className="absolute inset-0 border-t-[3px] border-indigo-500 rounded-full animate-spin" />
                 <div className="absolute inset-4 md:inset-6 bg-indigo-500/10 rounded-full animate-pulse blur-xl" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                   <div className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
+                </div>
             </div>
-            <p className="text-white text-xs md:text-base font-black font-space tracking-[0.4em] md:tracking-[0.5em] uppercase animate-pulse mb-3">{t.oracle_loading}</p>
-            <p className="text-indigo-400/60 text-[8px] md:text-[10px] uppercase tracking-widest font-space font-black">{t.oracle_decrypting}</p>
+            <p className="text-white text-sm md:text-xl font-black font-space tracking-[0.5em] uppercase animate-pulse mb-3">{t.oracle_loading}</p>
+            <p className="text-indigo-400/60 text-[9px] md:text-[10px] uppercase tracking-[0.4em] font-space font-black">{t.oracle_decrypting}</p>
           </div>
         </div>
       )}
