@@ -1,5 +1,5 @@
 
-export type Tier = 'ESSENTIEL' | 'SOUVENIR' | 'CONSTELLATION';
+export type Tier = 'ESSENTIEL' | 'AURA' | 'NOVA' | 'GALAXY' | 'UNIVERSE' | 'BRAND' | 'SOCIAL';
 export type Language = 'en' | 'fr' | 'es' | 'de';
 
 export interface Capsule {
@@ -8,12 +8,15 @@ export interface Capsule {
   title: string;
   message: string;
   imageUrl: string;
+  logoUrl?: string; // For brands
+  externalLink?: string; // For brands/social
   author: string;
   tier: Tier;
   location?: string;
   isAnonymous: boolean;
   createdAt: string;
   likes: number;
+  guestSlots?: number;
 }
 
 export interface Offer {
@@ -23,6 +26,7 @@ export interface Offer {
   description: string;
   features: string[];
   color: string;
+  category: 'personal' | 'professional' | 'social';
 }
 
 export interface User {

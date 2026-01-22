@@ -4,28 +4,67 @@ import { Offer, Capsule } from './types';
 export const OFFERS: Offer[] = [
   {
     id: 'ESSENTIEL',
-    name: 'Essentiel',
-    price: 9,
-    description: 'A classic memory in the stars.',
-    features: ['1 message', '1 photo', 'Public visibility'],
-    color: 'border-slate-400 text-slate-100',
+    name: 'Fragment',
+    price: 2.90,
+    description: 'A pure message drifting through time.',
+    features: ['1 text message', 'Infinite duration'],
+    color: 'border-slate-500 text-slate-100',
+    category: 'personal'
   },
   {
-    id: 'SOUVENIR',
-    name: 'Souvenir+',
-    price: 29,
-    description: 'Enhance your legacy.',
-    features: ['Up to 3 photos', 'Ambient music', 'Featured for 7 days', 'Custom frame'],
+    id: 'AURA',
+    name: 'Aura',
+    price: 4.90,
+    description: 'Light up your message with a visual.',
+    features: ['1 message', '1 photo', 'Cosmic glow'],
     color: 'border-blue-400 text-blue-100',
+    category: 'personal'
   },
   {
-    id: 'CONSTELLATION',
-    name: 'Constellation',
-    price: 79,
-    description: 'Shine brighter than anyone.',
-    features: ['High-visibility "Star" icon', 'Premium badge', 'Shareable link', 'Infinite duration'],
-    color: 'border-amber-400 text-amber-100',
+    id: 'NOVA',
+    name: 'Nova',
+    price: 9.90,
+    description: 'A brilliant collection of memories.',
+    features: ['1 message', '5 photos', 'Diffraction spikes'],
+    color: 'border-indigo-400 text-indigo-100',
+    category: 'personal'
   },
+  {
+    id: 'GALAXY',
+    name: 'Galaxy',
+    price: 14.90,
+    description: 'A shared orbit for close ones.',
+    features: ['1 message', '10 photos', '5 guest slots'],
+    color: 'border-purple-400 text-purple-100',
+    category: 'personal'
+  },
+  {
+    id: 'UNIVERSE',
+    name: 'Universe',
+    price: 19.90,
+    description: 'The ultimate temporal monument.',
+    features: ['1 message', '10 photos', '10 guest slots'],
+    color: 'border-amber-400 text-amber-100',
+    category: 'personal'
+  },
+  {
+    id: 'SOCIAL',
+    name: 'Social Star',
+    price: 90,
+    description: 'Bridge the gap between eras.',
+    features: ['Profile Image', 'Social Media Link', 'Increased Visibility'],
+    color: 'border-rose-400 text-rose-100',
+    category: 'social'
+  },
+  {
+    id: 'BRAND',
+    name: 'Nebula Brand',
+    price: 290,
+    description: 'Eternal visibility for your vision.',
+    features: ['Transparent Logo', 'Brand Link', 'Featured Placement'],
+    color: 'border-emerald-400 text-emerald-100',
+    category: 'professional'
+  }
 ];
 
 export const MOCK_CAPSULES: Capsule[] = [
@@ -36,33 +75,23 @@ export const MOCK_CAPSULES: Capsule[] = [
     message: 'The day humanity touched the moon. A reminder of what we can achieve when we look up.',
     imageUrl: 'https://picsum.photos/seed/moon/600/400',
     author: 'Neil',
-    tier: 'CONSTELLATION',
+    tier: 'UNIVERSE',
     isAnonymous: false,
     createdAt: new Date().toISOString(),
     likes: 1240,
   },
   {
-    id: '2',
-    date: '1989-11-09',
-    title: 'Wall Coming Down',
-    message: 'I was there when the barriers fell. Freedom felt like static in the air.',
-    imageUrl: 'https://picsum.photos/seed/wall/600/400',
-    author: 'BerlinDreamer',
-    tier: 'SOUVENIR',
+    id: 'brand-1',
+    date: '2025-05-20',
+    title: 'SpaceX Exploration',
+    message: 'Reaching for the stars, one launch at a time. The future belongs to the curious.',
+    imageUrl: 'https://picsum.photos/seed/mars/600/400',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/36/SpaceX-Logo-Xonly.png',
+    externalLink: 'https://spacex.com',
+    author: 'SpaceX',
+    tier: 'BRAND',
     isAnonymous: false,
     createdAt: new Date().toISOString(),
-    likes: 850,
-  },
-  {
-    id: '3',
-    date: '2025-01-01',
-    title: 'Future Hopes',
-    message: 'To my future self: I hope we finally learned to play the guitar.',
-    imageUrl: 'https://picsum.photos/seed/guitar/600/400',
-    author: 'SelfCare',
-    tier: 'ESSENTIEL',
-    isAnonymous: true,
-    createdAt: new Date().toISOString(),
-    likes: 45,
+    likes: 5400,
   }
 ];

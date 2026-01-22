@@ -142,11 +142,13 @@ const Timeline: React.FC<Props> = ({ capsules, lang, onSelectCapsule, onSelectDa
                         }}
                         className={`absolute top-1/2 left-1/2 -ml-5 -mt-5 group/star cursor-pointer transition-all duration-700 hover:scale-150 z-20`}
                       >
+                        {/* Fix: Replaced 'CONSTELLATION' and 'SOUVENIR' with valid Tier values 'UNIVERSE' and 'GALAXY' to resolve type overlap errors */}
                         <div className={`relative w-10 h-10 rounded-full transition-shadow duration-500 ${
-                          c.tier === 'CONSTELLATION' ? 'bg-amber-300 shadow-[0_0_40px_rgba(251,191,36,1)]' :
-                          c.tier === 'SOUVENIR' ? 'bg-blue-300 shadow-[0_0_25px_rgba(96,165,250,0.8)]' : 'bg-slate-100 shadow-[0_0_15px_white/80]'
+                          c.tier === 'UNIVERSE' ? 'bg-amber-300 shadow-[0_0_40px_rgba(251,191,36,1)]' :
+                          c.tier === 'GALAXY' ? 'bg-blue-300 shadow-[0_0_25px_rgba(96,165,250,0.8)]' : 'bg-slate-100 shadow-[0_0_15px_white/80]'
                         }`}>
-                          {c.tier === 'CONSTELLATION' && (
+                          {/* Fix: Replaced 'CONSTELLATION' with 'UNIVERSE' to resolve type overlap error */}
+                          {c.tier === 'UNIVERSE' && (
                             <>
                               <div className="diffraction-spike absolute top-1/2 left-[-15px] right-[-15px] h-[1.5px] opacity-80" />
                               <div className="diffraction-spike absolute left-1/2 top-[-15px] bottom-[-15px] w-[1.5px] opacity-80" />
