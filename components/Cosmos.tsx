@@ -11,9 +11,9 @@ const Cosmos: React.FC = () => {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let stars: { x: number; y: number; size: number; speed: number; opacity: number; color: string; drift: number }[] = [];
+    let stars: { x: number; y: number; size: number; speedX: number; speedY: number; opacity: number; color: string; twinkle: number }[] = [];
 
-    const starColors = ['#ffffff', '#cbd5e1', '#fef9c3', '#818cf8', '#fae8ff'];
+    const starColors = ['#ffffff', '#cbd5e1', '#fef9c3', '#818cf8', '#fae8ff', '#a5b4fc'];
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -23,28 +23,30 @@ const Cosmos: React.FC = () => {
 
     const initStars = () => {
       stars = [];
-      // Distant stars
-      for (let i = 0; i < 300; i++) {
+      // Distant static-ish stars
+      for (let i = 0; i < 400; i++) {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 0.8,
-          speed: Math.random() * 0.05 + 0.02,
+          size: Math.random() * 0.7,
+          speedX: (Math.random() - 0.5) * 0.02,
+          speedY: -(Math.random() * 0.05 + 0.02),
           opacity: Math.random(),
-          color: starColors[0],
-          drift: (Math.random() - 0.5) * 0.02
+          color: '#ffffff',
+          twinkle: Math.random() * 0.02
         });
       }
-      // Mid stars
+      // Bright colorful stars
       for (let i = 0; i < 150; i++) {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          size: Math.random() * 1.5,
-          speed: Math.random() * 0.15 + 0.05,
+          size: Math.random() * 1.8,
+          speedX: (Math.random() - 0.5) * 0.05,
+          speedY: -(Math.random() * 0.15 + 0.05),
           opacity: Math.random(),
           color: starColors[Math.floor(Math.random() * starColors.length)],
-          drift: (Math.random() - 0.5) * 0.05
+          twinkle: Math.random() * 0.05
         });
       }
     };
@@ -56,32 +58,22 @@ const Cosmos: React.FC = () => {
         ctx.globalAlpha = star.opacity;
         ctx.fillStyle = star.color;
         
-        // Circular star
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Very occasional glow for larger stars
-        if (star.size > 1.2 && star.opacity > 0.8) {
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = star.color;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-        }
-
-        // Twinkle effect
-        star.opacity += (Math.random() - 0.5) * 0.02;
+        // Twinkle Logic
+        star.opacity += (Math.random() - 0.5) * star.twinkle;
         if (star.opacity < 0.2) star.opacity = 0.2;
         if (star.opacity > 1) star.opacity = 1;
 
-        // Subtle drift movement
-        star.y -= star.speed;
-        star.x += star.drift;
+        // Drift Logic
+        star.y += star.speedY;
+        star.x += star.speedX;
 
-        if (star.y < 0) {
-            star.y = canvas.height;
-            star.x = Math.random() * canvas.width;
-        }
+        // Loop screen
+        if (star.y < 0) star.y = canvas.height;
+        if (star.y > canvas.height) star.y = 0;
         if (star.x < 0) star.x = canvas.width;
         if (star.x > canvas.width) star.x = 0;
       });
@@ -102,11 +94,15 @@ const Cosmos: React.FC = () => {
   return (
     <>
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-        <div className="nebula absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full" />
-        <div className="nebula absolute top-[40%] -right-[20%] w-[50%] h-[50%] bg-purple-700/10 rounded-full" />
-        <div className="nebula absolute -bottom-[10%] left-[20%] w-[40%] h-[40%] bg-blue-600/10 rounded-full" />
+        {/* Deep Nebulas */}
+        <div className="absolute -top-[10%] -left-[10%] w-[70%] h-[70%] bg-indigo-900/10 rounded-full blur-[120px] nebula" />
+        <div className="absolute top-[30%] -right-[20%] w-[60%] h-[60%] bg-purple-900/10 rounded-full blur-[100px] nebula" />
+        <div className="absolute -bottom-[20%] left-[10%] w-[50%] h-[50%] bg-blue-900/10 rounded-full blur-[110px] nebula" />
+        
+        {/* Particle Overlay (Stardust) */}
+        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]" />
       </div>
-      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none opacity-80 z-0" />
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none opacity-90 z-0" />
     </>
   );
 };
