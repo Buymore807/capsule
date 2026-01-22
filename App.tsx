@@ -130,7 +130,7 @@ const App: React.FC = () => {
             <div className="h-px w-20 bg-indigo-500/50" />
             <span className="text-xs font-black uppercase tracking-[0.6em] text-indigo-400 font-space">{t.hero_archive_protocol}</span>
           </div>
-          <h2 className="text-7xl md:text-[9rem] font-black mb-12 text-white leading-[0.85] tracking-tighter font-space uppercase">
+          <h2 className="text-6xl md:text-[7.5rem] font-black mb-12 text-white leading-[0.85] tracking-tighter font-space uppercase">
             {t.hero_title_1} <br/>{t.hero_title_2} <span className="text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 via-purple-400 to-white">{t.hero_title_3}</span>
           </h2>
           <div className="flex flex-col md:flex-row gap-16 items-start">
