@@ -10,7 +10,14 @@ import { generateStellarSummary } from './services/geminiService';
 import { translations } from './i18n';
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('en');
+  // Automatic language detection
+  const getBrowserLanguage = (): Language => {
+    const navLang = navigator.language.split('-')[0];
+    const supported: Language[] = ['en', 'fr', 'es', 'de'];
+    return supported.includes(navLang as Language) ? (navLang as Language) : 'en';
+  };
+
+  const [lang, setLang] = useState<Language>(getBrowserLanguage());
   const [capsules, setCapsules] = useState<Capsule[]>(MOCK_CAPSULES);
   const [selectedCapsule, setSelectedCapsule] = useState<Capsule | null>(null);
   const [isPurchaseFlowOpen, setIsPurchaseFlowOpen] = useState(false);
