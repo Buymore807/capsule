@@ -18,45 +18,55 @@
             font-family: 'Space Grotesk', sans-serif;
         }
         .cosmos-bg {
-            background: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #0c0a21 40%, #020617 100%);
+            background: radial-gradient(circle at 50% 50%, #0c0a21 0%, #050510 50%, #020617 100%);
         }
         
-        @keyframes nebula-pulse {
-            0%, 100% { opacity: 0.4; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.1); }
+        @keyframes nebula-drift {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-2%, 2%) scale(1.1); }
+            100% { transform: translate(0, 0) scale(1); }
         }
         .nebula {
-            filter: blur(80px);
-            animation: nebula-pulse 15s ease-in-out infinite;
+            filter: blur(100px);
+            animation: nebula-drift 25s ease-in-out infinite;
             mix-blend-mode: screen;
+            opacity: 0.15;
         }
 
-        @keyframes star-glow {
-            0%, 100% { box-shadow: 0 0 10px rgba(255,255,255,0.4); }
-            50% { box-shadow: 0 0 20px rgba(255,255,255,0.8), 0 0 40px rgba(255,255,255,0.2); }
-        }
-        .star-item {
-            animation: star-glow 3s ease-in-out infinite;
+        @keyframes star-twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
 
-        @keyframes shooting-star {
-            0% { transform: translateX(0) translateY(0) rotate(-45deg); opacity: 0; }
-            10% { opacity: 1; }
-            70% { opacity: 1; }
-            100% { transform: translateX(-1000px) translateY(1000px) rotate(-45deg); opacity: 0; }
+        .diffraction-spike {
+            position: absolute;
+            background: white;
+            box-shadow: 0 0 10px white;
         }
-        .shooting-star {
-            position: fixed;
-            width: 2px;
-            height: 2px;
-            background: linear-gradient(to right, rgba(255,255,255,1), rgba(255,255,255,0));
-            animation: shooting-star 5s linear infinite;
+
+        .constellation-line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            animation: dash 5s linear forwards;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
         }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.5); }
+        ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(99, 102, 241, 0.4); }
     </style>
 <script type="importmap">
 {

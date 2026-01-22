@@ -11,9 +11,9 @@ const Cosmos: React.FC = () => {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let stars: { x: number; y: number; size: number; speed: number; opacity: number; color: string }[] = [];
+    let stars: { x: number; y: number; size: number; speed: number; opacity: number; color: string; drift: number }[] = [];
 
-    const colors = ['#ffffff', '#e0f2fe', '#fef9c3', '#fae8ff', '#818cf8'];
+    const starColors = ['#ffffff', '#cbd5e1', '#fef9c3', '#818cf8', '#fae8ff'];
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -23,14 +23,28 @@ const Cosmos: React.FC = () => {
 
     const initStars = () => {
       stars = [];
-      for (let i = 0; i < 400; i++) {
+      // Distant stars
+      for (let i = 0; i < 300; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 0.8,
+          speed: Math.random() * 0.05 + 0.02,
+          opacity: Math.random(),
+          color: starColors[0],
+          drift: (Math.random() - 0.5) * 0.02
+        });
+      }
+      // Mid stars
+      for (let i = 0; i < 150; i++) {
         stars.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           size: Math.random() * 1.5,
-          speed: Math.random() * 0.2 + 0.05,
+          speed: Math.random() * 0.15 + 0.05,
           opacity: Math.random(),
-          color: colors[Math.floor(Math.random() * colors.length)]
+          color: starColors[Math.floor(Math.random() * starColors.length)],
+          drift: (Math.random() - 0.5) * 0.05
         });
       }
     };
@@ -41,21 +55,35 @@ const Cosmos: React.FC = () => {
       stars.forEach(star => {
         ctx.globalAlpha = star.opacity;
         ctx.fillStyle = star.color;
+        
+        // Circular star
         ctx.beginPath();
         ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Twinkle
-        star.opacity += (Math.random() - 0.5) * 0.05;
-        if (star.opacity < 0.1) star.opacity = 0.1;
+        // Very occasional glow for larger stars
+        if (star.size > 1.2 && star.opacity > 0.8) {
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = star.color;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+        }
+
+        // Twinkle effect
+        star.opacity += (Math.random() - 0.5) * 0.02;
+        if (star.opacity < 0.2) star.opacity = 0.2;
         if (star.opacity > 1) star.opacity = 1;
 
-        // Move
+        // Subtle drift movement
         star.y -= star.speed;
+        star.x += star.drift;
+
         if (star.y < 0) {
             star.y = canvas.height;
             star.x = Math.random() * canvas.width;
         }
+        if (star.x < 0) star.x = canvas.width;
+        if (star.x > canvas.width) star.x = 0;
       });
       
       animationFrameId = requestAnimationFrame(draw);
@@ -73,17 +101,12 @@ const Cosmos: React.FC = () => {
 
   return (
     <>
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="nebula absolute -top-40 -left-40 w-96 h-96 bg-purple-600/20 rounded-full" />
-        <div className="nebula absolute top-1/2 -right-40 w-80 h-80 bg-blue-600/10 rounded-full" />
-        <div className="nebula absolute -bottom-40 left-1/3 w-96 h-96 bg-indigo-600/15 rounded-full" />
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="nebula absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-indigo-600/20 rounded-full" />
+        <div className="nebula absolute top-[40%] -right-[20%] w-[50%] h-[50%] bg-purple-700/10 rounded-full" />
+        <div className="nebula absolute -bottom-[10%] left-[20%] w-[40%] h-[40%] bg-blue-600/10 rounded-full" />
       </div>
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="shooting-star" style={{ top: '10%', left: '80%', animationDelay: '0s' }} />
-        <div className="shooting-star" style={{ top: '30%', left: '95%', animationDelay: '7s' }} />
-        <div className="shooting-star" style={{ top: '50%', left: '100%', animationDelay: '14s' }} />
-      </div>
-      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none opacity-60 z-0" />
+      <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none opacity-80 z-0" />
     </>
   );
 };
